@@ -42,6 +42,19 @@ class TTS {
         return `${url}?authorization=${authorization}&date=${date}&host=${host}`;
     }
     /**
+     * 文本转base64
+     * @param text 文本
+     */
+    private textToBase64(text: string): string {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text);
+        let binary = '';
+        for (let i = 0; i < data.length; i++) {
+            binary += String.fromCharCode(data[i]);
+        }
+        return btoa(binary);
+    }
+    /**
      * 播放音频
      */
     private async playAudio() {
@@ -121,7 +134,8 @@ class TTS {
                     },
                     data: {
                         status: 2,
-                        text: btoa(String.fromCharCode(...new TextEncoder().encode(this.content))),
+                        // text: btoa(String.fromCharCode(...new TextEncoder().encode(this.content))),
+                        text: this.textToBase64(this.content!)
                     }
                 }
                 this.ttsWS?.send(JSON.stringify(params));
