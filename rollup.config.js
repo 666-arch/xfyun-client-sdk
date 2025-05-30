@@ -23,6 +23,7 @@ export default {
     babel({
       babelHelpers: "bundled",
       exclude: "node_modules/**",
+      extensions: ['.ts']
     }),
     terser(), //代码压缩
   ],
