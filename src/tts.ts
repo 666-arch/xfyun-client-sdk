@@ -24,6 +24,10 @@ class TTS {
         this.apiSecret = config.apiSecret;
         this.content = content;
     }
+    /**
+     * 讯飞接口鉴权
+     * @returns 
+     */
     private generateSignature() {
         const url = "wss://tts-api.xfyun.cn/v2/tts";
         const host = location.host;
@@ -76,7 +80,17 @@ class TTS {
 
         } catch (error) {
             console.log('Failed to play audio', error);
+        }
+    }
 
+    /**
+     * 停止播放
+     */
+    private stopPlayAudio() {
+        if (this.isPlaying && this.audioSource) {
+            this.audioSource.stop();
+            this.isPlaying = false;
+            console.log('play stopped');
         }
     }
 
@@ -84,7 +98,7 @@ class TTS {
      * 主要合成方法
      * @returns 
      */
-    public async synthesize(): Promise<void> {
+    public async synthesize(options: TTSOptions = {}): Promise<void> {
         return new Promise((resolve, reject) => {
             const url = this.generateSignature();
             if (!("websocket" in window)) {
@@ -97,13 +111,13 @@ class TTS {
                         app_id: this.appid
                     },
                     business: {
-                        aue: 'raw',
-                        auf: "audio/L16;rate=16000",
-                        vcn: "xiaoyan",
-                        speed: 50,
-                        volume: 50,
-                        pitch: 50,
-                        tte: "UTF-8",
+                        aue: options.audioFormat ?? 'raw',
+                        auf: `audio/L16;rate=${options.sampleRate || 16000}`,
+                        vcn: options.voice ?? "xiaoyan",
+                        speed: options.speed ?? 50,
+                        volume: options.volume ?? 50,
+                        pitch: options.pitch ?? 50,
+                        tte: "UTF-8", //文本编码
                     },
                     data: {
                         status: 2,
