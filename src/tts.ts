@@ -140,7 +140,53 @@ class TTS {
                 }
                 this.ttsWS?.send(JSON.stringify(params));
             };
+
+            //接收es回调
+            this.ttsWS.onmessage = (event) => {
+                const response: WebSocketMessage = JSON.parse(event.data);
+                if (response.code === 0) {
+                    //解码base64数据
+                    const audioData = Uint8Array.from(atob(response.data.audio), c => c.charCodeAt(0));
+                    this.audioChunks.push(audioData.buffer);
+
+                    //如果是最后一个数据包
+                    if (response.data.status === 2) {
+                        console.log('Received all audio data');
+                        this.ttsWS?.close();
+                        this.playAudio().then(resolve).catch(reject)
+                    }
+                } else {
+                    this.ttsWS?.close();
+                    reject(new Error(`TTS error：${response.message} (code ${response.code})`))
+                }
+            };
+            //发生错误
+            this.ttsWS.onerror = (error) => {
+                console.log('websocket error：', error);
+                this.ttsWS?.close();
+                reject(new Error('webscoket connection error'))
+            };
+            //关闭连接清理
+            this.ttsWS.onclose = () => {
+                this.ttsWS = null;
+            }
         })
+    }
+
+    /**
+     * 资源销毁
+     */
+    public destory() {
+        this.stopPlayAudio();
+        if (this.ttsWS) {
+            this.ttsWS.close();
+            this.ttsWS = null;
+        }
+        if (this.audioContext) {
+            this.audioContext.close();
+            this.audioContext = null;
+        }
+        this.audioChunks = [];
     }
 }
 
