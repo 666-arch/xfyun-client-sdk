@@ -13,8 +13,8 @@ class TTS {
     private content?: string;
 
     private ttsWS: WebSocket | null = null;
-    private audioChunks: ArrayBuffer[] = []; //所有音频片段包
-    private audioContext: AudioContext | null = null; //建立音频流上下文
+    private audioChunks: ArrayBuffer[] = []; //音频片段包
+    private audioContext: AudioContext | null = null; //音频上下文
     private audioSource: AudioBufferSourceNode | null = null; //音频源
     private isPlaying = false;
 
@@ -51,8 +51,32 @@ class TTS {
             const totalLength = this.audioChunks.reduce((acc, chunk) => acc + chunk.byteLength, 0);
             const combineBuffer = new Uint8Array(totalLength);
 
+            let offset = 0;
+            for (const chunk of this.audioChunks) {
+                combineBuffer.set(new Uint8Array(chunk), offset);
+                offset += chunk.byteLength;
+            }
+            //创建音频上下文
+            this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const audioBuffer = await this.audioContext.decodeAudioData(combineBuffer.buffer);
+
+            //创建音频源并立即播放
+            this.audioSource = this.audioContext.createBufferSource();
+            this.audioSource.buffer = audioBuffer;
+            this.audioSource.connect(this.audioContext.destination);
+
+            this.audioSource.onended = () => {
+                this.isPlaying = false;
+                console.log('Play finished');
+            };
+
+            this.audioSource.start(0);
+            this.isPlaying = true;
+            console.log('Audio play started');
+
         } catch (error) {
-            
+            console.log('Failed to play audio', error);
+
         }
     }
 
