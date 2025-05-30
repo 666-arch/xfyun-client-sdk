@@ -1,0 +1,95 @@
+import CryptoJS from 'crypto-js';
+/**
+ * @param appid appid
+ * @param apiKey 鉴权key
+ * @param apiSecret 鉴权密钥
+ * @param ttsWS websocket
+ * @param content 合成文本
+ */
+class TTS {
+    private appid: string;
+    private apiKey: string;
+    private apiSecret: string;
+    private content?: string;
+
+    private ttsWS: WebSocket | null = null;
+    private audioChunks: ArrayBuffer[] = []; //所有音频片段包
+    private audioContext: AudioContext | null = null; //建立音频流上下文
+    private audioSource: AudioBufferSourceNode | null = null; //音频源
+    private isPlaying = false;
+
+    constructor(config: Config, content: string) {
+        this.appid = config.appid;
+        this.apiKey = config.apiKey;
+        this.apiSecret = config.apiSecret;
+        this.content = content;
+    }
+    private generateSignature() {
+        const url = "wss://tts-api.xfyun.cn/v2/tts";
+        const host = location.host;
+        const date = new Date().toUTCString();
+        const algorithm = "hmac-sha256";
+        const headers = "host date request-line";
+        const signatureOrigin = `host: ${host}\ndate: ${date}\nGET /v2/tts HTTP/1.1`;
+        const signatureSha = CryptoJS.HmacSHA256(signatureOrigin, this.apiSecret);
+        const signature = CryptoJS.enc.Base64.stringify(signatureSha);
+        const authorizationOrigin = `api_key="${this.apiKey}", algorithm="${algorithm}", headers="${headers}", signature="${signature}"`;
+        const authorization = btoa(authorizationOrigin);
+        return `${url}?authorization=${authorization}&date=${date}&host=${host}`;
+    }
+    /**
+     * 播放音频
+     */
+    private async playAudio() {
+        if (this.audioChunks.length === 0) {
+            console.warn('No audio data to play')
+            return;
+        }
+
+        try {
+            //合并所有音频片段
+            const totalLength = this.audioChunks.reduce((acc, chunk) => acc + chunk.byteLength, 0);
+            const combineBuffer = new Uint8Array(totalLength);
+
+        } catch (error) {
+            
+        }
+    }
+
+    /**
+     * 主要合成方法
+     * @returns 
+     */
+    public async synthesize(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const url = this.generateSignature();
+            if (!("websocket" in window)) {
+                return reject(new Error('WebSocket is not supported in this environment'))
+            }
+            this.ttsWS = new WebSocket(url);
+            this.ttsWS.onopen = () => {
+                const params = {
+                    common: {
+                        app_id: this.appid
+                    },
+                    business: {
+                        aue: 'raw',
+                        auf: "audio/L16;rate=16000",
+                        vcn: "xiaoyan",
+                        speed: 50,
+                        volume: 50,
+                        pitch: 50,
+                        tte: "UTF-8",
+                    },
+                    data: {
+                        status: 2,
+                        text: btoa(String.fromCharCode(...new TextEncoder().encode(this.content))),
+                    }
+                }
+                this.ttsWS?.send(JSON.stringify(params));
+            };
+        })
+    }
+}
+
+export default TTS
