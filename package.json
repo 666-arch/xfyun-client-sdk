@@ -1,8 +1,18 @@
 {
   "name": "xfyun-client-sdk",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "xunfei voice sdk",
   "main": "dist/index.ts",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": "./dist/*"
+  },
   "files": [
     "dist"
   ],

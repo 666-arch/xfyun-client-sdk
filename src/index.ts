@@ -10,3 +10,6 @@ export class XFYunTTSClient {
         }
     }
 }
+
+export default XFYunTTSClient
+

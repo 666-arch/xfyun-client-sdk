@@ -15,7 +15,8 @@ export default {
     },
     {
       file: 'dist/index.esm.js',
-      format: 'esm'
+      format: 'es',
+      exports: 'named'
     }
   ],
   plugins: [

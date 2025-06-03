@@ -9,11 +9,11 @@ npm install xfyun-tts-sdk
 
 ## 使用示例
 ```ts
-import { XFYunTTS } from 'xfyun-tts-sdk';
+import { XFYunTTSClient } from 'xfyun-tts-sdk';
 ```
 
 ```ts
-const tts = new XFYunTTS({
+const tts = new XFYunTTSClient({
     appid: your_appid,
     apiKey: your_apikey,
     apiSecret: your_apiSecret
