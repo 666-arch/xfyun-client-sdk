@@ -10,7 +10,7 @@ class TTS {
     private appid: string;
     private apiKey: string;
     private apiSecret: string;
-    private content?: string;
+    // private content?: string;
 
     private ttsWS: WebSocket | null = null;
     private audioChunks: ArrayBuffer[] = []; //音频片段包
@@ -109,6 +109,8 @@ class TTS {
 
     /**
      * 主要合成方法
+     * @param content 合成文本
+     * @param options 可选
      * @returns 
      */
     public async synthesize(content: string, options: TTSOptions = {}): Promise<void> {

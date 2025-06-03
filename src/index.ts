@@ -1,6 +1,6 @@
 import TTS from './tts';
-class XFYunTTSClient {
-    constructor(config: Config, content: string) {
+export class XFYunTTSClient {
+    constructor(config: Config) {
         this.validateConfig(config)
         new TTS({ ...config })
     }
@@ -10,4 +10,3 @@ class XFYunTTSClient {
         }
     }
 }
-export default XFYunTTSClient
