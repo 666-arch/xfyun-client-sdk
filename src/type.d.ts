@@ -5,11 +5,13 @@ type AudioRate = 8000 | 16000 | 24000 | 48000 //音频采样率
  * @field appid 
  * @field apiKey 
  * @field apiSecret 
+ * @field content 
  */
 declare type Config = {
     appid: string;
     apiKey: string;
     apiSecret: string;
+    content?: string;
 }
 /**
  * @description websocket 消息类型

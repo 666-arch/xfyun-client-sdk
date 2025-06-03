@@ -10,7 +10,7 @@ class TTS {
     private appid: string;
     private apiKey: string;
     private apiSecret: string;
-    // private content?: string;
+    private content: string;
 
     private ttsWS: WebSocket | null = null;
     private audioChunks: ArrayBuffer[] = []; //音频片段包
@@ -22,7 +22,7 @@ class TTS {
         this.appid = config.appid;
         this.apiKey = config.apiKey;
         this.apiSecret = config.apiSecret;
-        // this.content = content;
+        this.content = config.content ?? '';
     }
     /**
      * 讯飞接口鉴权
@@ -137,7 +137,7 @@ class TTS {
                     data: {
                         status: 2,
                         // text: btoa(String.fromCharCode(...new TextEncoder().encode(this.content))),
-                        text: this.textToBase64(content)
+                        text: this.textToBase64(this.content)
                     }
                 }
                 this.ttsWS?.send(JSON.stringify(params));
