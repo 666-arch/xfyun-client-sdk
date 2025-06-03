@@ -6,3 +6,22 @@
 ```bash
 npm install xfyun-tts-sdk
 ```
+
+## 使用示例
+```ts
+import { XFYunTTS } from 'xfyun-tts-sdk';
+```
+
+```ts
+const tts = new XFYunTTS({
+    appid: your_appid,
+    apiKey: your_apikey,
+    apiSecret: your_apiSecret
+})
+```
+
+### 合成语音
+
+```ts
+const audioSource = await tts.synthesize('你好世界')
+```

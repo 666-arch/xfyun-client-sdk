@@ -2,7 +2,7 @@ import TTS from './tts';
 class XFYunTTSClient {
     constructor(config: Config, content: string) {
         this.validateConfig(config)
-        new TTS({ ...config }, content)
+        new TTS({ ...config })
     }
     private validateConfig(config: Config) {
         if (!config.appid || !config.apiKey || !config.apiSecret) {

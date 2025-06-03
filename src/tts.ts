@@ -18,11 +18,11 @@ class TTS {
     private audioSource: AudioBufferSourceNode | null = null; //音频源
     private isPlaying = false;
 
-    constructor(config: Config, content: string) {
+    constructor(config: Config) {
         this.appid = config.appid;
         this.apiKey = config.apiKey;
         this.apiSecret = config.apiSecret;
-        this.content = content;
+        // this.content = content;
     }
     /**
      * 讯飞接口鉴权
@@ -111,7 +111,7 @@ class TTS {
      * 主要合成方法
      * @returns 
      */
-    public async synthesize(options: TTSOptions = {}): Promise<void> {
+    public async synthesize(content: string, options: TTSOptions = {}): Promise<void> {
         return new Promise((resolve, reject) => {
             const url = this.generateSignature();
             if (!("websocket" in window)) {
@@ -135,7 +135,7 @@ class TTS {
                     data: {
                         status: 2,
                         // text: btoa(String.fromCharCode(...new TextEncoder().encode(this.content))),
-                        text: this.textToBase64(this.content!)
+                        text: this.textToBase64(content)
                     }
                 }
                 this.ttsWS?.send(JSON.stringify(params));
