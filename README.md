@@ -2,11 +2,11 @@
 科大讯飞语言合成（TTS）浏览器端 SDK（流式WebAPi二次集成）
 ## 安装
 ```bash
-npm install xfyun-tts-sdk
+npm install xfyun-client-sdk
 ```
 ## 使用示例
 ```ts
-import { XFYunTTSClient } from 'xfyun-tts-sdk';
+import { XFYunTTSClient } from 'xfyun-client-sdk';
 ```
 ### 注意
 #### appid/apikey/apiSecret 都是科大讯飞内部提供，在调用前，会自动校验是否鉴权成功，否则会直接抛异常
