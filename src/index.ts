@@ -120,7 +120,7 @@ export default class XFYunTTSClient {
                         app_id: this.appid
                     },
                     business: {
-                        aue: options.audioFormat ?? 'raw',
+                        aue: options.audioFormat ?? 'lame',
                         auf: `audio/L16;rate=${options.sampleRate || 16000}`,
                         vcn: options.voice ?? "xiaoyan",
                         speed: options.speed ?? 50,
@@ -130,8 +130,8 @@ export default class XFYunTTSClient {
                     },
                     data: {
                         status: 2,
-                        // text: btoa(String.fromCharCode(...new TextEncoder().encode(this.content))),
-                        text: this.textToBase64(this.content)
+                        text: btoa(String.fromCharCode(...new TextEncoder().encode(this.content))),
+                        // text: this.textToBase64(this.content)
                     }
                 }
                 this.ttsWS?.send(JSON.stringify(params));
