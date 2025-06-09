@@ -17,7 +17,7 @@ export default class XFYunTTSClient {
         this.apiSecret = config.apiSecret;
         this.content = config.content ?? '';
         this.validateConfig(config)
-    } 
+    }
     /**
      * 科大讯飞接口鉴权
      * @returns 
@@ -126,7 +126,7 @@ export default class XFYunTTSClient {
                         speed: options.speed ?? 50,
                         volume: options.volume ?? 50,
                         pitch: options.pitch ?? 50,
-                        tte: "UTF-8", //文本编码
+                        tte: "UTF8", //文本编码
                     },
                     data: {
                         status: 2,
