@@ -1,6 +1,6 @@
 {
   "name": "xfyun-client-sdk",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "xunfei voice sdk",
   "main": "dist/index.ts",
   "module": "dist/index.esm.js",
@@ -23,7 +23,7 @@
   },
   "keywords": [
     "tts",
-    "xfyun",
+    "xfyun",  
     "speech"
   ],
   "author": "huangchao",
