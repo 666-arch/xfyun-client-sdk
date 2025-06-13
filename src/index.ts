@@ -19,6 +19,15 @@ export default class XFYunTTSClient {
         this.validateConfig(config)
     }
     /**
+     * 科大讯飞密钥校验
+     * @param config 
+     */
+    private validateConfig(config: Config) {
+        if (!config.appid || !config.apiKey || !config.apiSecret) {
+            throw new Error('Missing required authenication parameters')
+        }
+    }
+    /**
      * 科大讯飞接口鉴权
      * @returns 
      */
@@ -35,21 +44,6 @@ export default class XFYunTTSClient {
         const authorization = btoa(authorizationOrigin);
         return `${url}?authorization=${authorization}&date=${date}&host=${host}`;
     }
-    
-    // /**
-    //  * 文本转base64
-    //  * @param text 文本
-    //  */
-    // private textToBase64(text: string): string {
-    //     const encoder = new TextEncoder();
-    //     const data = encoder.encode(text);
-    //     let binary = '';
-    //     for (let i = 0; i < data.length; i++) {
-    //         binary += String.fromCharCode(data[i]);
-    //     }
-    //     return btoa(binary);
-    // }
-
     /**
      * 播放音频
      */
@@ -90,7 +84,6 @@ export default class XFYunTTSClient {
             console.log('Failed to play audio', error);
         }
     }
-
     /**
      * 停止播放
      */
@@ -101,7 +94,6 @@ export default class XFYunTTSClient {
             console.log('play stopped');
         }
     }
-
     /**
      * 主要合成方法
      * @param options 可选（科大讯飞 business 参数）
@@ -183,10 +175,5 @@ export default class XFYunTTSClient {
             this.audioContext = null;
         }
         this.audioChunks = [];
-    }
-    private validateConfig(config: Config) {
-        if (!config.appid || !config.apiKey || !config.apiSecret) {
-            throw new Error('Missing required authenication parameters')
-        }
     }
 }
